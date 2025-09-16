@@ -1,104 +1,75 @@
-# Génération d'Images avec un Réseau Antagoniste Génératif (GAN)
 
-Ce projet met en œuvre un Réseau Antagoniste Génératif Convolutionnel Profond (DCGAN) en utilisant PyTorch pour générer de nouvelles images synthétiques. Le modèle est entraîné à produire des images qui ressemblent à celles d'un jeu de données fourni.
+# Application des GANs pour l'Augmentation de Données Audio de Congestion Routière
 
-![Architecture du GAN](gan_final.JPG)
+Ce projet, réalisé dans le cadre du diplôme d'ingénieur à l'ENET'COM, explore l'utilisation des **Réseaux Antagonistes Génératifs (GANs)** pour augmenter un jeu de données audio destiné à la classification des niveaux de congestion du trafic urbain. L'objectif est de surmonter le problème des jeux de données limités et déséquilibrés afin d'améliorer la performance des modèles d'apprentissage automatique.
 
-## Table des Matières
-- [Description](#description)
-- [Prérequis](#prérequis)
-- [Installation](#installation)
-- [Utilisation](#utilisation)
-- [Architecture du Modèle](#architecture-du-modèle)
-  - [Générateur](#générateur)
-  - [Discriminateur](#discriminateur)
-- [Résultats](#résultats)
-- [Auteur](#auteur)
+##  contexte du projet
 
-## Description
+La gestion efficace du trafic urbain est un défi majeur. Les systèmes intelligents basés sur l'IA peuvent prédire les niveaux de congestion, mais leur efficacité dépend de la qualité et de la quantité des données d'entraînement. Les données audio (bruits de la circulation) représentent une alternative peu coûteuse aux capteurs visuels, mais les ensembles de données disponibles sont souvent de petite taille et les classes (faible, moyenne, forte congestion) sont mal réparties.
 
-Les Réseaux Antagonistes Génératifs (GANs) sont une classe de modèles d'apprentissage non supervisé où deux réseaux de neurones, le **Générateur** et le **Discriminateur**, sont mis en compétition.
+Ce projet propose une solution innovante en utilisant les GANs pour générer des données synthétiques (spectrogrammes audio) et ainsi créer un jeu de données plus riche et équilibré.
 
--   **Le Générateur** : Crée des images à partir d'un vecteur de bruit aléatoire. Son objectif est de générer des images si réalistes qu'elles peuvent tromper le Discriminateur.
--   **Le Discriminateur** : Évalue les images pour déterminer si elles sont réelles (provenant du jeu de données d'entraînement) ou fausses (créées par le Générateur).
+##  metodologia
 
-À travers un entraînement itératif, le Générateur apprend à produire des images de plus en plus convaincantes, tandis que le Discriminateur s'améliore dans la détection des faux.
+Le processus global du projet est structuré en plusieurs étapes clés :
 
-## Prérequis
+1.  **Collecte de Données** : Extraction d'enregistrements audio de trafic routier à partir de diverses vidéos d'environnements urbains disponibles en ligne.
+2.  **Prétraitement des Données** :
+    *   **Segmentation** : Découpage des fichiers audio en segments courts (5-10 secondes).
+    *   **Annotation Manuelle** : Classification de chaque segment en trois catégories : `faible`, `moyenne` ou `élevée` congestion.
+3.  **Conversion en Spectrogrammes** : Transformation des signaux audio en représentations visuelles (spectrogrammes) à l'aide de la bibliothèque `Librosa`. Ces images servent d'entrée pour les modèles.
+4.  **Augmentation avec les GANs** :
+    *   Entraînement d'un modèle GAN sur les spectrogrammes existants.
+    *   Le **générateur** apprend à créer de nouveaux spectrogrammes réalistes.
+    *   Le **discriminateur** apprend à distinguer les vrais spectrogrammes des faux, forçant le générateur à s'améliorer.
+5.  **Création du Jeu de Données Final** : Intégration des spectrogrammes synthétiques de haute qualité au jeu de données initial pour équilibrer les classes, en particulier celles qui sont sous-représentées (`moyenne` et `élevée`).
+6.  **Validation** : L'ensemble de données augmenté est ensuite utilisé pour entraîner et évaluer un modèle de classification, démontrant une amélioration notable de la précision.
 
-Toutes les bibliothèques Python nécessaires pour exécuter ce projet sont listées dans le fichier `requirements.txt`.
+## technologies et outils
 
-- Python 3.x
-- PyTorch
-- NumPy
-- Matplotlib
-- torchvision
+*   **Langage** : Python
+*   **Bibliothèques Principales** :
+    *   **TensorFlow & Keras** : Pour l'implémentation et l'entraînement du modèle GAN.
+    *   **Librosa** : Pour le traitement des fichiers audio et la génération des spectrogrammes.
+*   **Environnement de Développement** : Jupyter Notebooks
+*   **Gestion de Projet** : Jira
 
-## Installation
+## résultats obtenus
 
-1.  **Clonez ce dépôt :**
+L'application des GANs a permis d'obtenir des résultats significatifs :
+
+*   **Rééquilibrage des Classes** : Le nombre d'exemples pour les catégories de congestion moyenne et élevée a été augmenté, corrigeant le déséquilibre initial du jeu de données.
+*   **Amélioration des Performances** : Les modèles de classification entraînés sur les données augmentées ont montré une **amélioration notable de la précision** et une meilleure capacité à généraliser.
+*   **Réduction du Surapprentissage (Overfitting)** : L'augmentation de la diversité des données a permis aux modèles d'être plus robustes et moins dépendants des spécificités du jeu de données initial.
+*   **Convergence du Modèle GAN** : L'analyse des courbes de perte (loss) du générateur et du discriminateur a montré une stabilisation progressive, indiquant que le modèle a appris avec succès à générer des données synthétiques de qualité.
+
+![Évolution des pertes du générateur et du discriminateur](https.storage.googleapis.com/snippets-production/public/249110000000_2001_1300.png)
+
+## Comment utiliser ce projet
+
+Pour répliquer ce projet, suivez les étapes ci-dessous :
+
+1.  **Clonez le dépôt :**
     ```bash
-    git clone https://github.com/Achraf-ABID/Nom-De-Votre-Projet.git
-    cd Nom-De-Votre-Projet
+    git clone https://github.com/votre-utilisateur/votre-repo.git
+    cd votre-repo
     ```
-    *(Remplacez `Nom-De-Votre-Projet` par le nom de votre dépôt)*
 
-2.  **Créez un environnement virtuel (recommandé) :**
+2.  **Créez un environnement virtuel et installez les dépendances :**
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # Sur Windows: venv\Scripts\activate
-    ```
-
-3.  **Installez les dépendances :**
-    ```bash
+    python -m venv env
+    source env/bin/activate  # Sur Windows: env\Scripts\activate
     pip install -r requirements.txt
     ```
 
-## Utilisation
+3.  **Structure des Données :**
+    Assurez-vous que vos données audio sont organisées dans des dossiers correspondant à leurs classes (ex: `/data/faible`, `/data/moyenne`, `/data/elevee`).
 
-L'ensemble du processus, de la configuration à la visualisation des résultats, est contenu dans le notebook Jupyter `GAN.ipynb`.
+4.  **Exécutez les notebooks :**
+    *   `01_data_preprocessing.ipynb` : Pour segmenter l'audio et générer les spectrogrammes.
+    *   `02_gan_training.ipynb` : Pour entraîner le modèle GAN sur vos données.
+    *   `03_classification_model.ipynb` : Pour entraîner un modèle de classification sur le jeu de données augmenté.
 
-1.  **Placez votre jeu de données** dans un dossier accessible. Le chemin d'accès à ce dossier doit être spécifié dans la variable `dataroot` du notebook.
-2.  **Lancez Jupyter Notebook ou JupyterLab :**
-    ```bash
-    jupyter notebook
-    ```
-3.  Ouvrez `GAN.ipynb` et exécutez les cellules séquentiellement.
+## Remerciements
 
-### Configuration
-
-Les principaux hyperparamètres peuvent être ajustés dans la deuxième cellule du notebook :
-
--   `dataroot` : Chemin vers le dossier racine des images d'entraînement.
--   `batch_size` : Taille du lot pour l'entraînement (par défaut : 8).
--   `image_size` : Taille des images (par défaut : 64x64).
--   `nz` : Taille du vecteur latent d'entrée `z` (par défaut : 100).
--   `num_epochs` : Nombre d'époques d'entraînement (par défaut : 128).
--   `lr` : Taux d'apprentissage (par défaut : 0.00025).
--   `beta1` : Paramètre Beta1 pour l'optimiseur Adam (par défaut : 0.8).
-
-## Architecture du Modèle
-
-### Générateur
-
-Le générateur prend un vecteur de bruit de dimension `nz` et le transforme en une image de `64x64x3` à travers une série de couches de convolution transposée (`ConvTranspose2d`), chacune suivie d'une normalisation par lots (`BatchNorm2d`) et d'une fonction d'activation ReLU. La couche finale utilise une fonction d'activation Tanh pour normaliser les pixels de l'image de sortie entre -1 et 1.
-
-### Discriminateur
-
-Le discriminateur est un classifieur binaire qui prend en entrée une image de `64x64x3`. Il utilise une séquence de couches de convolution (`Conv2d`) avec des fonctions d'activation LeakyReLU pour extraire les caractéristiques de l'image. La couche finale utilise une fonction Sigmoid pour produire une probabilité indiquant si l'image est considérée comme réelle ou fausse.
-
-## Résultats
-
-Après 128 époques d'entraînement, le générateur est capable de produire les images suivantes à partir de vecteurs de bruit aléatoires.
-
-### Image Générée
-![Image générée par le GAN](resultat_primaire.JPG)
-
-### Évolution de la Perte (Loss)
-Le graphique ci-dessous montre la progression des fonctions de perte du Générateur (G) et du Discriminateur (D) au fil des itérations. Une convergence stable indique un bon équilibre dans l'entraînement.
-
-*(L'image du graphique de perte est générée à la fin de l'exécution du notebook `GAN.ipynb`)*
-
-## Auteur
-
-- **Achraf ABID** - [Achraf-ABID](https://github.com/Achraf-ABID)
+Ce projet a été élaboré par **Youssef Krichen** sous la supervision de **Mme Mouna ZOUARI** au **Centre de Recherche en Numérique de Sfax (CRNS)**. Un grand merci aux membres de l'**École Nationale d'Électronique et des Télécommunications de Sfax (ENET'COM)** pour leur soutien académique.
